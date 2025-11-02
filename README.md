@@ -1,73 +1,69 @@
-# React + TypeScript + Vite
+# badger-icon-generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application for generating 24x24 pixel icons with drawing and emoji rendering capabilities.
 
-Currently, two official plugins are available:
+![Badger Icon Generator](https://github.com/user-attachments/assets/19c2c4e6-8eb8-4eab-85c5-3fba2f79f5e2)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **24x24 Pixel Grid**: Interactive grid for creating icons
+- **Color Picker**: Select any color for drawing
+- **Emoji Rendering**: Convert emoji or characters to pixel art
+- **Click and Drag Drawing**: Draw individual pixels or drag to paint
+- **PNG Export**: Export icons with transparent background
+- **Clear Grid**: Reset to start fresh
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
+### Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Production Build
+
+```bash
+npm run build
+npm run preview
+```
+
+## Usage
+
+### Drawing with Color
+
+1. Select a color using the color picker
+2. Click on individual pixels in the grid to draw
+3. Or click and drag to draw multiple pixels
+
+### Creating from Emoji
+
+1. Enter an emoji or character (max 2 characters) in the input field
+2. Click "Render to Grid" to convert it to pixel art
+
+### Exporting
+
+Click "Export to PNG" to download your icon as a 24x24 PNG file with a transparent background.
+
+### Clearing
+
+Click "Clear Grid" to reset all pixels and start over.
+
+## Technologies
+
+- React 19.1.1
+- TypeScript
+- Vite 7.1.12
+- HTML5 Canvas API
+
+## License
+
+MIT
