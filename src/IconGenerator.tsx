@@ -7,16 +7,19 @@ interface Pixel {
   color: string;
 }
 
+// Helper function to create an empty grid
+const createEmptyGrid = (): Pixel[][] => {
+  return Array(GRID_SIZE)
+    .fill(null)
+    .map(() =>
+      Array(GRID_SIZE)
+        .fill(null)
+        .map(() => ({ color: 'transparent' }))
+    );
+};
+
 function IconGenerator() {
-  const [grid, setGrid] = useState<Pixel[][]>(() =>
-    Array(GRID_SIZE)
-      .fill(null)
-      .map(() =>
-        Array(GRID_SIZE)
-          .fill(null)
-          .map(() => ({ color: 'transparent' }))
-      )
-  );
+  const [grid, setGrid] = useState<Pixel[][]>(() => createEmptyGrid());
   const [selectedColor, setSelectedColor] = useState('#000000');
   const [isDrawing, setIsDrawing] = useState(false);
   const [emojiInput, setEmojiInput] = useState('');
@@ -24,13 +27,9 @@ function IconGenerator() {
 
   // Handle drawing on the grid
   const handlePixelClick = (row: number, col: number) => {
-    const newGrid = grid.map((r, rowIndex) =>
-      r.map((pixel, colIndex) =>
-        rowIndex === row && colIndex === col
-          ? { color: selectedColor }
-          : pixel
-      )
-    );
+    const newGrid = [...grid];
+    newGrid[row] = [...newGrid[row]];
+    newGrid[row][col] = { color: selectedColor };
     setGrid(newGrid);
   };
 
@@ -42,15 +41,7 @@ function IconGenerator() {
 
   // Clear the grid
   const clearGrid = () => {
-    setGrid(
-      Array(GRID_SIZE)
-        .fill(null)
-        .map(() =>
-          Array(GRID_SIZE)
-            .fill(null)
-            .map(() => ({ color: 'transparent' }))
-        )
-    );
+    setGrid(createEmptyGrid());
   };
 
   // Render emoji/character to grid
@@ -76,13 +67,7 @@ function IconGenerator() {
 
     // Read pixel data
     const imageData = ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE);
-    const newGrid = Array(GRID_SIZE)
-      .fill(null)
-      .map(() =>
-        Array(GRID_SIZE)
-          .fill(null)
-          .map(() => ({ color: 'transparent' }))
-      );
+    const newGrid = createEmptyGrid();
 
     for (let row = 0; row < GRID_SIZE; row++) {
       for (let col = 0; col < GRID_SIZE; col++) {
