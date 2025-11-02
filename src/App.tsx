@@ -6,7 +6,7 @@ type Pixel = string | null
 function App() {
   const GRID_SIZE = 24
   const [grid, setGrid] = useState<Pixel[][]>(
-    Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null))
+    Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(null))
   )
   const [selectedColor, setSelectedColor] = useState('#000000')
   const [isDrawing, setIsDrawing] = useState(false)
@@ -43,7 +43,7 @@ function App() {
       ctx.fillText(emoji, GRID_SIZE / 2, GRID_SIZE / 2)
       
       const imageData = ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE)
-      const newGrid = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null))
+      const newGrid = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(null))
       
       for (let row = 0; row < GRID_SIZE; row++) {
         for (let col = 0; col < GRID_SIZE; col++) {
@@ -63,7 +63,7 @@ function App() {
   }
 
   const handleClear = () => {
-    setGrid(Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(null)))
+    setGrid(Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(null)))
   }
 
   const handleExportPNG = () => {
