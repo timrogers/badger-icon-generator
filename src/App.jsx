@@ -50,21 +50,58 @@ function App() {
   const renderCharacterToGrid = () => {
     if (!emojiInput) return;
     
+    // Use a larger temporary canvas to render the emoji
+    const tempCanvas = document.createElement('canvas');
+    const tempSize = GRID_SIZE * 2;
+    tempCanvas.width = tempSize;
+    tempCanvas.height = tempSize;
+    const tempCtx = tempCanvas.getContext('2d');
+    
+    // Draw on temporary canvas
+    tempCtx.font = '36px Arial';
+    tempCtx.textAlign = 'center';
+    tempCtx.textBaseline = 'middle';
+    tempCtx.fillText(emojiInput, tempSize / 2, tempSize / 2);
+    
+    // Get the bounding box of the rendered content
+    const tempImageData = tempCtx.getImageData(0, 0, tempSize, tempSize);
+    let minX = tempSize, minY = tempSize, maxX = 0, maxY = 0;
+    
+    for (let y = 0; y < tempSize; y++) {
+      for (let x = 0; x < tempSize; x++) {
+        const alpha = tempImageData.data[(y * tempSize + x) * 4 + 3];
+        if (alpha > 0) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    
+    // Calculate dimensions and scale to fit in GRID_SIZE
+    const contentWidth = maxX - minX + 1;
+    const contentHeight = maxY - minY + 1;
+    const scale = Math.min(GRID_SIZE / contentWidth, GRID_SIZE / contentHeight);
+    
+    // Create final canvas
     const canvas = document.createElement('canvas');
     canvas.width = GRID_SIZE;
     canvas.height = GRID_SIZE;
     const ctx = canvas.getContext('2d');
     
-    // Set font and draw character centered
-    ctx.font = '18px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    // Calculate centering offset
+    const scaledWidth = contentWidth * scale;
+    const scaledHeight = contentHeight * scale;
+    const offsetX = (GRID_SIZE - scaledWidth) / 2;
+    const offsetY = (GRID_SIZE - scaledHeight) / 2;
     
-    // Draw at exact center
-    const x = GRID_SIZE / 2;
-    const y = GRID_SIZE / 2;
-    
-    ctx.fillText(emojiInput, x, y);
+    // Draw the cropped and scaled content centered
+    ctx.drawImage(
+      tempCanvas,
+      minX, minY, contentWidth, contentHeight,
+      offsetX, offsetY, scaledWidth, scaledHeight
+    );
     
     // Get image data and convert to pixels
     const imageData = ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE);
