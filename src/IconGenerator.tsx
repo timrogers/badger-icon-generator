@@ -52,34 +52,54 @@ function IconGenerator() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Use a larger canvas for better emoji rendering quality, then scale down
+    const scale = 4;
+    const renderSize = GRID_SIZE * scale;
+
+    // Set canvas size to larger scale
+    canvas.width = renderSize;
+    canvas.height = renderSize;
+
     // Clear canvas
-    ctx.clearRect(0, 0, GRID_SIZE, GRID_SIZE);
+    ctx.clearRect(0, 0, renderSize, renderSize);
 
-    // Set canvas size
-    canvas.width = GRID_SIZE;
-    canvas.height = GRID_SIZE;
-
-    // Draw emoji
+    // Draw emoji at larger size with proper centering
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = `${GRID_SIZE * 0.8}px Arial`;
-    ctx.fillText(emojiInput, GRID_SIZE / 2, GRID_SIZE / 2);
+    // Use system emoji font and make it slightly larger to fill more of the space
+    ctx.font = `${renderSize * 0.875}px "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif`;
+    ctx.fillText(emojiInput, renderSize / 2, renderSize / 2);
 
-    // Read pixel data
-    const imageData = ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE);
+    // Read pixel data from the high-res canvas
+    const imageData = ctx.getImageData(0, 0, renderSize, renderSize);
     const newGrid = createEmptyGrid();
 
+    // Downsample to 24x24 by averaging pixels in each grid cell
     for (let row = 0; row < GRID_SIZE; row++) {
       for (let col = 0; col < GRID_SIZE; col++) {
-        const index = (row * GRID_SIZE + col) * 4;
-        const alpha = imageData.data[index + 3];
+        let r = 0, g = 0, b = 0, count = 0;
 
-        if (alpha > 0) {
-          const r = imageData.data[index];
-          const g = imageData.data[index + 1];
-          const b = imageData.data[index + 2];
+        // Average pixels in this grid cell
+        for (let dy = 0; dy < scale; dy++) {
+          for (let dx = 0; dx < scale; dx++) {
+            const srcRow = row * scale + dy;
+            const srcCol = col * scale + dx;
+            const index = (srcRow * renderSize + srcCol) * 4;
+            
+            const pixelAlpha = imageData.data[index + 3];
+            if (pixelAlpha > 0) {
+              r += imageData.data[index];
+              g += imageData.data[index + 1];
+              b += imageData.data[index + 2];
+              count++;
+            }
+          }
+        }
+
+        // Set pixel if it has any content
+        if (count > 0) {
           newGrid[row][col] = {
-            color: `rgb(${r}, ${g}, ${b})`,
+            color: `rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`,
           };
         }
       }
