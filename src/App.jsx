@@ -56,10 +56,15 @@ function App() {
     const ctx = canvas.getContext('2d');
     
     // Set font and draw character centered
-    ctx.font = '20px Arial';
+    ctx.font = '18px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(emojiInput, GRID_SIZE / 2, GRID_SIZE / 2);
+    
+    // Draw at exact center
+    const x = GRID_SIZE / 2;
+    const y = GRID_SIZE / 2;
+    
+    ctx.fillText(emojiInput, x, y);
     
     // Get image data and convert to pixels
     const imageData = ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE);
