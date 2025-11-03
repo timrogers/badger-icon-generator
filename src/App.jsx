@@ -111,10 +111,21 @@ function App() {
     canvas.height = GRID_SIZE;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, GRID_SIZE, GRID_SIZE);
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
     ctx.font = `${GRID_SIZE * 0.9}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
-    ctx.fillText(firstGlyph, GRID_SIZE / 2, GRID_SIZE / 2 + 1);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+
+    const metrics = ctx.measureText(firstGlyph);
+    const left = metrics.actualBoundingBoxLeft ?? 0;
+    const right = metrics.actualBoundingBoxRight ?? metrics.width ?? 0;
+    const ascent = metrics.actualBoundingBoxAscent ?? GRID_SIZE / 2;
+    const descent = metrics.actualBoundingBoxDescent ?? 0;
+    const width = left + right || metrics.width || GRID_SIZE;
+    const height = ascent + descent || GRID_SIZE;
+    const drawX = Math.round((GRID_SIZE - width) / 2 + left);
+    const drawY = Math.round((GRID_SIZE - height) / 2 + ascent);
+
+    ctx.fillText(firstGlyph, drawX, drawY);
 
     const { data } = ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE);
     const nextPixels = createEmptyGrid();
