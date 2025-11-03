@@ -37,7 +37,7 @@ function App() {
     
     if (ctx) {
       ctx.clearRect(0, 0, GRID_SIZE, GRID_SIZE)
-      ctx.font = `${GRID_SIZE - 2}px Arial`
+      ctx.font = `${GRID_SIZE}px Arial`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillText(emoji, GRID_SIZE / 2, GRID_SIZE / 2)
